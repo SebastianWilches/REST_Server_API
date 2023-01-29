@@ -10,7 +10,7 @@ const SchemaUsuario = Schema({
         required: [true, 'El correo es obligatorio'],
         unique: true
     },
-    password: { 
+    password: {
         type: String,
         required: [true, 'El password es obligatorio']
     },
@@ -33,13 +33,14 @@ const SchemaUsuario = Schema({
 })
 
 //Vamos a sobreescribir un metodo para cuando yo devuelva el usuario no me muestre password ni version
-SchemaUsuario.methods.toJSON = function(){
-    const { __v, password, ...usuario } = this.toObject();
+SchemaUsuario.methods.toJSON = function () {
+    const { __v, password, _id, ...usuario } = this.toObject();
+    usuario.uid = _id;
     return usuario;
 }
 
 
 
 //Exportamos 
-module.exports = model ('Usuarios', SchemaUsuario) //El primer parametro es la colección, El segundo es el schema
+module.exports = model('Usuarios', SchemaUsuario) //El primer parametro es la colección, El segundo es el schema
 //La analogia para entender esto seria, una coleccion de 'Usuarios' tienen la estructura de SchemaUsuario

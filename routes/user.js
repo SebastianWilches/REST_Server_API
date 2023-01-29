@@ -2,6 +2,8 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 const { userGET, userPUT, userPOST, userDELETE } = require("../controllers/userController");
 const { RolValidator, ExisteEmailValidator, ExisteID_BD } = require("../helpers/db-validator");
+const { validarJWT } = require("../middlewares/validarJWT");
+const { validarAdminRol } = require("../middlewares/validarRol");
 const { validarUsuario } = require("../middlewares/validarUsuarios");
 
 
@@ -35,6 +37,8 @@ router.post('/', [
 
 //DELETE
 router.delete('/:id', [
+    validarJWT,
+    validarAdminRol,
     check('id','No es un ID de Mongo valido').isMongoId(),
     check('id', 'No existe una coincidencia para ese ID').custom(ExisteID_BD),
 

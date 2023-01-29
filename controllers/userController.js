@@ -74,13 +74,18 @@ const userPOST = async (req = request, res = response) => {
 const userDELETE = async(req = request, res = response) => {
     const { id } = req.params;
 
+    const uid = req.uid; //Es la que agregamos en la validación del JWT
+    const usuarioAutenticado = req.usuarioAutenticado; //Es la que agregamos en la validación del JWT
+
     // const usuario = await Usuario.findByIdAndDelete(id); //Lo borra por COMPLETO de la BD
 
     const usuario = await Usuario.findByIdAndUpdate(id, {estado:false}); //Cambiaremos el estado que tiene en la BD para listarlo o no
 
     res.status(200).json({
         msg: 'Delete API',
-        usuario
+        usuario,
+        uid: `ID del admin que efectuó la acción: ${uid}`,
+        usuarioAutenticado
     })
 }
 
