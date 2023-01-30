@@ -2,9 +2,8 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 const { userGET, userPUT, userPOST, userDELETE } = require("../controllers/userController");
 const { RolValidator, ExisteEmailValidator, ExisteID_BD } = require("../helpers/db-validator");
-const { validarJWT } = require("../middlewares/validarJWT");
-const { validarAdminRol, validarRoles } = require("../middlewares/validarRol");
-const { validarUsuario } = require("../middlewares/validarUsuarios");
+
+const { validarJWT, validarAdminRol, validarRoles, validarUsuario } = require('../middlewares/index');
 
 
 const router = Router();
@@ -14,8 +13,8 @@ const router = Router();
 router.get('/', userGET);
 
 //PUT
-router.put('/:id',[
-    check('id','No es un ID de Mongo valido').isMongoId(),
+router.put('/:id', [
+    check('id', 'No es un ID de Mongo valido').isMongoId(),
     check('id', 'No existe una coincidencia para ese ID').custom(ExisteID_BD),
     check('rol', 'El rol no es valido').custom(RolValidator),
 
@@ -40,7 +39,7 @@ router.delete('/:id', [
     validarJWT,
     // validarAdminRol,
     validarRoles('ADMIN', 'SELLER'),
-    check('id','No es un ID de Mongo valido').isMongoId(),
+    check('id', 'No es un ID de Mongo valido').isMongoId(),
     check('id', 'No existe una coincidencia para ese ID').custom(ExisteID_BD),
 
     validarUsuario

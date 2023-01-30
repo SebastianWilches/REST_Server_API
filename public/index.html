@@ -4,9 +4,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hola</title>
+    <title>MusicDB - Node</title>
 </head>
 <body>
-    <h1>pagina estatica</h1>
+    <h1>Google Sign In</h1>
+    <hr>
+    <div id="g_id_onload"
+         data-client_id="936317106883-l87g900i4l342v5nruonilesd8uao25a.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false"> 
+         <!-- data-auto_prompt="false"  es para que apenas entre a la pág. me muestre el botón de logear -->
+         <!-- data-callback="handleCredentialResponse" es la funcion que llamamos cuando se realiza una autenticación exitosa -->
+      </div>
+      <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+      </div>
+
+
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
+      <script>
+        function handleCredentialResponse(response) { //No funciona con arrow function
+           
+            //Este es el Google Token : ID_TOKEN que nos genera
+
+           const googleToken = response.credential;
+           console.log(`ID token: ${googleToken}`);
+      
+        }
+      </script>
 </body>
 </html>
