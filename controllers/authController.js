@@ -2,6 +2,7 @@ const { response, request } = require('express');
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/generarJWT');
+const { googleTokenValidator } = require('../helpers/googleToken-validator');
 
 const login = async (req = request, res = response) => {
     const { correo, password } = req.body;
@@ -56,11 +57,60 @@ const login = async (req = request, res = response) => {
 
 const googleSignIn = async (req = request, res = response) => {
 
+    const { google_token } = req.body;
 
-    const {google_token} = req.body;
+    try {
+
+        // Basicamente vamos a validar esta token con Google
+        // y asi poder obtener toda su información asociada
+        const googleUser = await googleTokenValidator(google_token); //Await porque me devuelve una promesa
+
+        const { email, email_verified, name, picture } = googleUser;
+        console.log(email);
+
+        //Aquí empezamos con validaciones que haremos en nuestra DB
+        //1.Encontrar a un usuario con ese correo
+        let usuario = await Usuario.findOne({ correo: email });
+        console.log(usuario);
+
+        if(!usuario){
+            //Si no existe, tengo que crearlo
+            const dataUsuario = {
+                nombre: name,
+                correo: email,
+                password: 123456, //Estas tengo que cambiarlas despues
+                rol: "ADMIN",
+                imagen: picture
+            }
+
+            usuario = new Usuario(dataUsuario);
+            await usuario.save();
+        }
+
+        //2. Si el usuario existe pero tiene un estado de false, negarle la entrada
+        if(!usuario.estado){
+            return res.status(401).json({
+                msg:'El usuario no tiene acceso a la aplicación.'
+            })
+        }
+
+        //3. Generamos el JWT
+        const token = await generarJWT(usuario.id);
+
+        res.status(201).json({
+            usuario,
+            token
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            msg: 'Error en el backend.'
+        })
+    }
 
     res.status(201).json({
-        msg:'Se envia el Google Token',
+        msg: 'Se envia el Google Token',
         google_token
     })
 
