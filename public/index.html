@@ -20,6 +20,8 @@
     data-shape="rectangular" data-logo_alignment="left">
   </div>
 
+  <!-- Sign Out -->
+  <button onclick="signOutGoogle()">SALIR DE LA SESIÓN</button>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
@@ -41,10 +43,23 @@
         .then(resp => resp.json())
         .then(resp => {
           console.log(resp);
+          //Guardamos en el local storage el correo con el que se logeo
+          localStorage.setItem('email', resp.usuario.correo);
         })
         .catch(console.warn);
 
 
+    }
+
+    const signOutGoogle = () => {
+
+      console.log(google.accounts.id);
+      google.accounts.id.disableAutoSelect();
+
+      google.accounts.id.revoke(localStorage.getItem('email'), done=>{
+        localStorage.clear();
+        location.reload();
+      })
     }
 
   </script>

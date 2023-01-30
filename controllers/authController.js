@@ -109,10 +109,6 @@ const googleSignIn = async (req = request, res = response) => {
         })
     }
 
-    res.status(201).json({
-        msg: 'Se envia el Google Token',
-        google_token
-    })
 
 }
 
