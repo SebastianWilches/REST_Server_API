@@ -3,7 +3,7 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/generarJWT');
 
-const login = async(req = request, res = response) => {
+const login = async (req = request, res = response) => {
     const { correo, password } = req.body;
 
 
@@ -11,14 +11,14 @@ const login = async(req = request, res = response) => {
         //Verificar si el correo existe
         const usuario = await Usuario.findOne({ correo });
 
-        if( !usuario ){
+        if (!usuario) {
             return res.status(400).json({
                 msg: "El correo no existe",
             });
         }
 
         //Verificar si el user está activo
-        if( !usuario.estado){
+        if (!usuario.estado) {
             return res.status(400).json({
                 msg: "El usuario esta inactivo",
             });
@@ -26,12 +26,12 @@ const login = async(req = request, res = response) => {
 
         //Verificar si la contraseña es correcta
         const validarPassword = bcrypt.compareSync(password, usuario.password);
-        if(!validarPassword){
+        if (!validarPassword) {
             return res.status(400).json({
                 msg: "La contraseña es incorrecta",
             });
         }
-        
+
 
         //Generar el JWT (Es await porque la función devuelve una promesa)
         const token = await generarJWT(usuario.id);
@@ -51,10 +51,22 @@ const login = async(req = request, res = response) => {
             msg: "ERROR en backend",
         });
     }
+}
 
+
+const googleSignIn = async (req = request, res = response) => {
+
+
+    const {google_token} = req.body;
+
+    res.status(201).json({
+        msg:'Se envia el Google Token',
+        google_token
+    })
 
 }
 
 module.exports = {
     login,
+    googleSignIn
 }

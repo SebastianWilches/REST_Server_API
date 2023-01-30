@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { login } = require("../controllers/authController");
+const { login, googleSignIn } = require("../controllers/authController");
 const { validarUsuario } = require("../middlewares/validarUsuarios");
 
 
@@ -13,5 +13,10 @@ router.post('/login', [
     check('password', 'El campo de password no puede estar vacio').notEmpty(),
     validarUsuario //Este es el que recoge todas las validaciones que no cumplen con los req.
 ], login);
+
+router.post('/googleAuth', [
+    check('google_token', 'Debe enviarse una Google Token').notEmpty(),
+    validarUsuario
+], googleSignIn)
 
 module.exports = router;

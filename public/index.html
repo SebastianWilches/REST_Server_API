@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicDB - Node</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MusicDB - Node</title>
 </head>
+
 <body>
-    <h1>Google Sign In</h1>
-    <hr>
-    <div id="g_id_onload"
-         data-client_id="936317106883-l87g900i4l342v5nruonilesd8uao25a.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false"> 
-         <!-- data-auto_prompt="false"  es para que apenas entre a la pág. me muestre el botón de logear -->
-         <!-- data-callback="handleCredentialResponse" es la funcion que llamamos cuando se realiza una autenticación exitosa -->
-      </div>
-      <div class="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-      </div>
+  <h1>Google Sign In</h1>
+  <hr>
+  <div id="g_id_onload" data-client_id="936317106883-l87g900i4l342v5nruonilesd8uao25a.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse" data-auto_prompt="false">
+    <!-- data-auto_prompt="false"  es para que apenas entre a la pág. me muestre el botón de logear -->
+    <!-- data-callback="handleCredentialResponse" es la funcion que llamamos cuando se realiza una autenticación exitosa -->
+  </div>
+  <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+    data-shape="rectangular" data-logo_alignment="left">
+  </div>
 
 
-      <script src="https://accounts.google.com/gsi/client" async defer></script>
-      <script>
-        function handleCredentialResponse(response) { //No funciona con arrow function
-           
-            //Este es el Google Token : ID_TOKEN que nos genera
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    function handleCredentialResponse(response) { //No funciona con arrow function
 
-           const googleToken = response.credential;
-           console.log(`ID token: ${googleToken}`);
-      
+      //Este es el Google Token : ID_TOKEN que nos genera.
+      const googleToken = {google_token: response.credential};
+
+      //Vamos a usar un endpoint creado en el backend para enviarlo y manejar nosotros mismas
+      //este token
+      const url = 'http://localhost:8080/api/auth/googleAuth';
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(googleToken),
+        headers: {
+          'Content-Type': 'application/json'
         }
-      </script>
+      })
+        .then(resp => resp.json())
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(console.warn);
+
+
+    }
+
+  </script>
 </body>
+
 </html>
