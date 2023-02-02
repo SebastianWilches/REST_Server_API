@@ -45,7 +45,7 @@ class Server {
         //Middleware para rutas
         this.app.use(this.paths.userRoute, require('../routes/user'));
         this.app.use(this.paths.authRoute, require('../routes/auth'));
-        this.app.use(this.paths.genreRoute, require('../routes/generos'));
+        this.app.use(this.paths.genreRoute, require('../routes/genre'));
     }
 
     start() {

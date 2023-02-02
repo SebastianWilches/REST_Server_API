@@ -3,7 +3,8 @@ const { Schema, model } = require('mongoose')
 const SchemaGenero = Schema({
     nombre:{
         type: String,
-        required: [true, 'El nombre del género es obligatorio']
+        required: [true, 'El nombre del género es obligatorio'],
+        unique: true
     },
     estado: {
         type: Boolean,
