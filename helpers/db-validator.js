@@ -1,3 +1,4 @@
+const Genero = require('../models/Genero');
 const Roles = require('../models/Rol');
 const Usuario = require('../models/Usuario')
 
@@ -24,9 +25,17 @@ const ExisteID_BD = async (id = '') => {
     }
 }
 
+const isIDGenre = async (id = '') => {
+    const isIDGenre = await Genero.findById(id);
+    if(!isIDGenre){
+        throw new Error(`El ID '${id}' no existe en la BD`);
+    }
+}
+
 
 module.exports = {
     RolValidator,
     ExisteEmailValidator,
-    ExisteID_BD
+    ExisteID_BD,
+    isIDGenre
 }

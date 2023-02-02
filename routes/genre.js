@@ -1,31 +1,27 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { createGenre } = require("../controllers/genreController");
+const { createGenre, getGenres, getGenre, updateGenre, deleteGenre } = require("../controllers/genreController");
+const { isIDGenre } = require("../helpers/db-validator");
 
-const { validarJWT, validarUsuario } = require("../middlewares");
-
-
+const { validarJWT, validarUsuario, validarRoles } = require("../middlewares");
 
 
 const router = Router();
 
-//PETICIONES
+//TODO: Crear un custom middleware para verificar el id que me esten mandand. existe genero?
+
 //Obtener todos los géneros - público
-router.get('/', (req, res) => {
-    res.status(200).json({
-        msg: 'GET',
-    })
-});
+router.get('/', getGenres);
 
 //Obtener género por ID - público
-router.get('/:id', (req, res) => {
-    res.status(200).json({
-        msg: 'GET con ID',
-    })
-});
+router.get('/:id', [
+    check('id', 'No es un ID de mongo valido').isMongoId(),
+    check('id', 'No existe una coincidencia para el ID').custom(isIDGenre),
+    validarUsuario
+], getGenre);
 
 //Crear un género - privado (Cualquier persona con un token válido)
-router.post('/', [    
+router.post('/', [
     validarJWT,
     check('nombre', 'El nombre no puede estar vacío.').notEmpty(),
     validarUsuario,
@@ -33,17 +29,22 @@ router.post('/', [
 ], createGenre);
 
 //Actualizar un género - privado (Cualquier persona con un token válido)
-router.put('/:id', (req, res) => {
-    res.status(200).json({
-        msg: 'PUT con ID',
-    })
-});
+router.put('/:id', [
+    validarJWT,
+    check('id', 'No es un ID de mongo valido').isMongoId(),
+    check('id', 'No existe una coincidencia para el ID').custom(isIDGenre),
+    check('nombre', 'El nombre no puede estar vacio').notEmpty(),
+    validarUsuario
+], updateGenre);
 
 //Borrar un género - privado (Solo si tiene el rol ADMIN)
-router.delete('/:id', (req, res) => {
-    res.status(200).json({
-        msg: 'BORRAR con ID',
-    })
-});
+router.delete('/:id', [
+    validarJWT,
+    validarRoles('ADMIN'),
+    check('id', 'No es un ID de mongo valido').isMongoId(),
+    check('id', 'No existe una coincidencia para el ID').custom(isIDGenre),
+
+    validarUsuario
+], deleteGenre);
 
 module.exports = router;
