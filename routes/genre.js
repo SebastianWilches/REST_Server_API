@@ -8,7 +8,6 @@ const { validarJWT, validarUsuario, validarRoles } = require("../middlewares");
 
 const router = Router();
 
-//TODO: Crear un custom middleware para verificar el id que me esten mandand. existe genero?
 
 //Obtener todos los géneros - público
 router.get('/', getGenres);

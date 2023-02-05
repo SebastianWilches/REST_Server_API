@@ -12,6 +12,7 @@ class Server {
             userRoute: '/api/users',
             authRoute: '/api/auth',
             genreRoute: '/api/genre',
+            albumRoute: '/api/album'
         }
 
         //Conexion base de datos
@@ -46,6 +47,7 @@ class Server {
         this.app.use(this.paths.userRoute, require('../routes/user'));
         this.app.use(this.paths.authRoute, require('../routes/auth'));
         this.app.use(this.paths.genreRoute, require('../routes/genre'));
+        this.app.use(this.paths.albumRoute, require('../routes/album'));
     }
 
     start() {

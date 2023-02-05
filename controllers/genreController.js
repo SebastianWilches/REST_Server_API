@@ -5,7 +5,7 @@ const Genero = require('../models/Genero');
 
 
 
-//TODO: POPULAR
+
 const getGenres = async (req = request, res = response) => {
 
     const { limiteInferior = 0, limiteSuperior = 9999 } = req.query;
@@ -26,7 +26,7 @@ const getGenres = async (req = request, res = response) => {
     })
 }
 
-//TODO: POPULAR
+
 const getGenre = async (req = request, res = response) => {
     const { id } = req.params;
 

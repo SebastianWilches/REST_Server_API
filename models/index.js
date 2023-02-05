@@ -4,6 +4,7 @@ const Usuario = require('../models/Usuario');
 const Genero = require('../models/Genero');
 const Server = require('../models/Server');
 const Rol = require('../models/Rol');
+const Album = require('../models/Album')
 
 
 module.exports = {
@@ -11,4 +12,5 @@ module.exports = {
     Genero,
     Server,
     Rol,
+    Album
 }
