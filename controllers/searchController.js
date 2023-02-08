@@ -13,8 +13,7 @@ const coleccionesPermitidas = [
 
 const searchUser = async (termino = '', res = response) => {
 
-    //Primero vamos a diferenciar si por el req param nos estan enviando un MongoID
-    //para buscar por el UID o por un campo cualquiera
+    //Primero vamos a diferenciar si por el req param nos estan enviando un MongoID para buscar por el UID o por un campo cualquiera
 
 
     const isMongoID = ObjectId.isValid(termino) //Si es un ID valido de Mongo devuelve true
@@ -24,10 +23,23 @@ const searchUser = async (termino = '', res = response) => {
         const usuario = await Usuario.findById(termino);
 
         //Si hay resultados que me devuelva un array, de lo contrario que el array este vacío
-        res.status(201).json({
+        return res.status(201).json({
             results: (usuario) ? [usuario] : []
         })
     }
+
+
+    //Busqueda por el termino
+    const regex = new RegExp(termino, 'i') //Con una expresión regular, le voy a poner que sea insensible a las mayúsculas o a las minúsculas
+
+    const usuarios = await Usuario.find({
+        $or: [{ nombre: regex }, { correo: regex }, { rol: regex }],
+        $and: [{ estado: true }]
+    });
+    res.status(200).json({
+        results: usuarios,
+    })
+
 
 
 }
