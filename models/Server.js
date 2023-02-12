@@ -9,7 +9,7 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.paths = {
-            userRoute: '/api/users',
+            userRoute: '/api/user',
             authRoute: '/api/auth',
             genreRoute: '/api/genre',
             albumRoute: '/api/album',

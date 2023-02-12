@@ -1,21 +1,19 @@
 const { request, response } = require('express');
 const { ObjectId } = require('mongoose').Types;
-const { Usuario } = require('../models');
+const { Usuario, Album, Genero, Rol } = require('../models');
 
 
 //Para las verificaciones
 const coleccionesPermitidas = [
-    "albums",
-    "generos",
-    "roles",
-    "usuarios"
+    'album',
+    'genre',
+    'role',
+    'user'
 ]
 
 const searchUser = async (termino = '', res = response) => {
 
     //Primero vamos a diferenciar si por el req param nos estan enviando un MongoID para buscar por el UID o por un campo cualquiera
-
-
     const isMongoID = ObjectId.isValid(termino) //Si es un ID valido de Mongo devuelve true
 
     //Busqueda por ID
@@ -39,15 +37,86 @@ const searchUser = async (termino = '', res = response) => {
     res.status(200).json({
         results: usuarios,
     })
+}
+
+const searchAlbum = async (termino = '', res = response) => {
+
+    //Busqueda por ID
+    const isMongoID = ObjectId.isValid(termino);
+    if (isMongoID) {
+        const album = await Album.findById(termino);
 
 
+        return res.status(201).json({
+            results: (album) ? [album] : []
+        })
+    }
 
+    //Busqueda por el termino
+    const regex = new RegExp(termino, 'i');
+
+    const album = await Album.find({
+        $or: [{ nombre: regex }, { descripcion: regex }],
+        $and: [{ estado: true }]
+    });
+
+    res.status(200).json({
+        results: album,
+    })
+}
+
+const searchGenre = async (termino = '', res = response) => {
+
+    //Busqueda por ID
+    const isMongoID = ObjectId.isValid(termino);
+    if (isMongoID) {
+        const genre = await Genero.findById(termino);
+
+
+        return res.status(201).json({
+            results: (genre) ? [genre] : []
+        })
+    }
+
+    //Busqueda por el termino
+    const regex = new RegExp(termino, 'i');
+
+    const genre = await Genero.find({
+        $or: [{ nombre: regex }],
+        $and: [{ estado: true }]
+    });
+
+    res.status(200).json({
+        results: genre,
+    })
+}
+
+const searchRole = async (termino = '', res = response) => {
+
+    //Busqueda por ID
+    const isMongoID = ObjectId.isValid(termino);
+    if (isMongoID) {
+        const rol = await Rol.findById(termino);
+
+
+        return res.status(201).json({
+            results: (rol) ? [rol] : []
+        })
+    }
+
+    //Busqueda por el termino
+    const regex = new RegExp(termino, 'i');
+
+    const rol = await Rol.find({ rol: regex });
+
+    res.status(200).json({
+        results: rol,
+    })
 }
 
 const search = (req = request, res = response) => {
 
     const { coleccion, termino } = req.params;
-    console.log(coleccion, termino);
 
     if (!coleccionesPermitidas.includes(coleccion)) {
         res.status(400).json({
@@ -57,13 +126,16 @@ const search = (req = request, res = response) => {
 
 
     switch (coleccion) {
-        case 'albums':
+        case 'album':
+            searchAlbum(termino, res);
             break;
-        case 'generos':
+        case 'genre':
+            searchGenre(termino, res);
             break;
-        case 'roles':
+        case 'role':
+            searchRole(termino, res);
             break;
-        case 'usuarios':
+        case 'user':
             searchUser(termino, res);
             break;
         default:
