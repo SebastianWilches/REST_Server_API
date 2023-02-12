@@ -1,6 +1,7 @@
 //HTTP
 const cors = require('cors')
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const { DBConnection } = require('../database/configDB');
 
 class Server {
@@ -14,6 +15,7 @@ class Server {
             genreRoute: '/api/genre',
             albumRoute: '/api/album',
             searchRoute: '/api/search',
+            uploadRoute: '/api/upload',
         }
 
         //Conexion base de datos
@@ -37,9 +39,14 @@ class Server {
         //Lectura del body (Cuando hagamos petición POST)
         this.app.use(express.json());
 
-
         //Para que use un directorio publico
         this.app.use(express.static('public'));
+
+        //Fileupload
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/'
+        }));
     }
 
 
@@ -50,6 +57,8 @@ class Server {
         this.app.use(this.paths.genreRoute, require('../routes/genre'));
         this.app.use(this.paths.albumRoute, require('../routes/album'));
         this.app.use(this.paths.searchRoute, require('../routes/search'));
+        this.app.use(this.paths.uploadRoute, require('../routes/upload'));
+        
     }
 
     start() {
