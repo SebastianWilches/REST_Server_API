@@ -28,13 +28,12 @@ const cargarArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg', 'gif']
                 reject(err);
             }
 
-            resolve(`Archivo ${nomUnico} subido con exito.`);
+            resolve(`${nomUnico}`);
         });
     })
-
-
-
 }
+
+
 
 module.exports = {
     cargarArchivo,
