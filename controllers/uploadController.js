@@ -1,6 +1,8 @@
 const { request, response } = require('express');
 const { cargarArchivo } = require('../helpers');
-const { Usuario, Album } = require('../models')
+const { Usuario, Album } = require('../models');
+const path = require('path');
+const fs = require('fs')
 
 
 const uploadFile = async (req = request, res = response) => {
@@ -49,6 +51,16 @@ const updateFile = async (req = request, res = response) => {
                 msg: `Aún no existe una busqueda disponible para ${coleccion}`,
             })
     }
+
+    //Limpiar imágenes anteriores
+    if (modelo.imagen) {
+        //Borramos la imagen que esta en el servidor
+        const pathImagen = path.join(__dirname, '../uploads', coleccion, modelo.imagen);
+        if(fs.existsSync(pathImagen)){
+            fs.unlinkSync(pathImagen);
+        }
+    }
+
 
     //Actualizar el registro
     const resultCargarArchivo = await cargarArchivo(req.files, undefined, coleccion);
