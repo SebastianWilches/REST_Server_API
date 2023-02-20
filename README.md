@@ -1,7 +1,9 @@
 # Fundamentos REST API
 
 ## Modelo de la base de datos
-
+<p align="center" style="padding: 20px; background: #252832">
+    <img src="https://github.com/SebastianWilches/REST_Server_API/blob/29c97f304325827fc4bd99c6b68178e577e9e575/assets/ModeloMusicDB.png" alt="Modelo BD Rest API">
+</p>
 
 ## Servicios REST
 Todos los servicios de esta REST API los encontrará en la documentación generada por Postman, que la puede encontrar [aquí](https://documenter.getpostman.com/view/20804832/2s93CHvb4P)
