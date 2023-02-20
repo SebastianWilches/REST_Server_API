@@ -1,5 +1,11 @@
 # Fundamentos REST API
 
+## Modelo de la base de datos
+
+
+## Servicios REST
+Todos los servicios de esta REST API los encontrará en la documentación generada por Postman, que la puede encontrar [aquí](https://documenter.getpostman.com/view/20804832/2s93CHvb4P)
+
 ## Middlewares
 Midlewares = Van a agregar otra funcionalidad al WebServer. La palabra clave para indicar que vamos a hacer uso de esto es con 'app.use()'.
 
